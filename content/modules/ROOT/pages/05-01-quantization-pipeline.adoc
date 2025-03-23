@@ -1,0 +1,115 @@
+= Model Quantization Pipeline
+
+This pipeline automates the process of quantizing machine learning models. It handles downloading the model from Hugging Face, quantizing it, uploading the quantized version to S3 (MinIO), and evaluating its accuracy.
+
+== Pipeline Overview
+
+The pipeline consists of the following stages:
+
+1. *Create PVC*: Creates a Persistent Volume Claim for storing model data
+2. *Download Model*: Downloads the specified model from Hugging Face Hub
+3. *Quantize Model*: Performs model quantization (supports int8 quantization)
+4. *Upload Model*: Uploads the quantized model to a S3 (MinIO) storage location
+5. *Evaluate Model*: Evaluates the quantized model's accuracy
+6. *Delete PVC*: Cleans up by deleting the PVC after completion
+
+== Prerequisites
+
+* Python 3.12
+* Kubeflow Pipelines SDK (`kfp`)
+* Access to OpenShift AI (formerly Red Hat OpenShift Data Science)
+* S3-compatible storage data connection configured in OpenShift AI
+
+== Workbench Installation Instructions
+
+We are going to reuse the workbench created at Section 3.
+
+NOTE: As we stopped the workbench we need to start it again to use it to modify/compile the pipeline
+[.bordershadow]
+image::03/03-workbench-done.png[]
+
+Inside the workbench we create a terminal session:
+[.bordershadow]
+image::05/05-create-terminal.png[]
+
+And install the required dependencies:
+
+[source,bash]
+----
+pip install -U kfp===2.9.0 kfp-kubernetes===1.3.0
+----
+[.bordershadow]
+image::05/05-install-kfp.png[]
+NOTE: There is some inconsistency on the yaml generated depending on the versions, so please ensure you are using this ones
+
+== Compiling the Pipeline
+
+To compile the pipeline into a YAML file that can be imported into OpenShift AI:
+
+[source,bash]
+----
+cd neural-magic-workshop/lab-materials/05/
+python quantization_pipeline.py
+----
+[.bordershadow]
+image::05/05-compile-pipeline.png[]
+IMPORTANT: Before compiling the pipeline, if you have not use `Minio - models` as your dataconnection name, you need to adjust the line `secret_name = "minio-models"` to point to the actual name of your dataconnection, otherwise the upload-model task will fail to find the right secret. Note the spaces are removed and it is lowercase.
+
+This will generate a `quantization_pipeline.yaml` file. Download it to your local machine.
+[.bordershadow]
+image::05/05-download-pipeline.png[]
+
+IMPORTANT: Once you got the `quantization_pipeline.yaml` file and you no longer need the workbench, ensure you stop it so that the associated GPU gets freed and it can be utilized to serve the model or running the pipeline.
+[.bordershadow]
+image::03/03-workbench-done.png[]
+[.bordershadow]
+image::03/03-workbench-stop.png[]
+
+== Using the Pipeline
+
+1. Log into your OpenShift AI instance
+2. Navigate to "Data Science Pipelines" → "Pipelines"
+3. Click "Import Pipeline"
+4. Enter a "name" and choose "Upload file" and select the generated `quantization_pipeline.yaml`
+5. Click "Import pipeline"
+
+NOTE: This steps are detailed as Section 2.4. Go back to it if you need to.
+
+=== Pipeline Parameters
+
+When running the pipeline, you can configure the following parameters:
+
+* `model_id`: The Hugging Face model ID (default: `ibm-granite/granite-3.2-2b-instruct`)
+* `output_path`: Path for the quantized model (default: `granite-int8-pipeline`)
+* `quantization_type`: Type of quantization to perform (default: `int8`, options: `int4` or `int8`)
+
+[.bordershadow]
+image::05/05-pipeline-run.png[]
+
+After the execution of the pipeline you should have an optimized version uploaded to your S3 bucket
+[.bordershadow]
+image::05/05-pipeline-run-success.png[]
+[.bordershadow]
+image::05/05-pipeline-run-minio.png[]
+
+== Storage Requirements
+
+The pipeline creates a PVC with:
+
+* Size: 30Gi
+* Access Mode: ReadWriteMany
+* Storage Class: standard
+
+Make sure your cluster has the appropriate storage class available.
+
+== Data Connection Setup
+
+Before running the pipeline:
+
+1. Create a data connection in OpenShift AI pointing to your (MinIO) S3 storage. You can reuse the one created at Section 2.2 (**Minio - models**)
+2. The data connection has the next mandatory fields:
+* Connection name: pipeline-s3-connection
+* Access Key
+* Secret Key
+* Endpoint
+* Bucket: need to ensure the bucket exists on S3 (MinIO) before triggering the pipeline 

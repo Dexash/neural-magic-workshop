@@ -2,7 +2,8 @@
 ** xref:01-01-llms.adoc[1.1 What are LLMs?]
 ** xref:01-02-neural-networks.adoc[1.2 What are Neural Networks?]
 ** xref:01-03-openshift-ai.adoc[1.3 OpenShift AI]
-** xref:01-04-model-optimization.adoc[1.4 Neural Magic Model Optimization]
+** xref:01-04-model-optimization.adoc[1.4 Model Optimization Techniques]
+** xref:01-05-nm.adoc[1.5 Neural Magic Solutions]
 
 * 2. Connection and Setup ({user})
 ** xref:02-01-getting-connected.adoc[2.1 Getting connected]
@@ -15,13 +16,15 @@
 ** xref:03-02-int-8-quantization.adoc[3.2 Weights and Activation Quantization (INT-8)]
 ** xref:03-03-fp-8-quantization.adoc[3.3 Weights and Activation Quantization (FP-8)]
 
-* 4. Pipelines: Working with LLM Compressor
-** xref:04-01-quantization-pipeline.adoc[4.1 Quantization with Pipelines]
-** xref:04-02-quantization-pipeline-exercise.adoc[4.2 Exercise]
+* 4. Model Performance ComparisonImage Processing
+** xref:04-01-base-model.adoc[4.1 Serving Base Models]
+** xref:04-02-optimized-model.adoc[4.2 Serving Optimized Models]
 
-* 5. Model Performance ComparisonImage Processing
-** xref:05-01-base-model.adoc[5.1 Serving Base Models]
-** xref:05-02-optimized-model.adoc[5.2 Serving Optimized Models]
+* 5. Pipelines: Working with LLM Compressor
+** xref:05-01-quantization-pipeline.adoc[5.1 Quantization with Pipelines]
+** xref:05-02-quantization-pipeline-exercise.adoc[5.2 Exercise]
+
+
 
 * 6. End of Lab
 ** xref:06-01-end-of-lab.adoc[6.1 Thanks]
