@@ -61,25 +61,25 @@ image::02/02-02-add-dc-type.png[]
 [.console-input]
 [source, text]
 [subs=attributes+]
-Shared Minio - pipelines
+Minio - models
 ** Access Key:
 [.lines_space]
 [.console-input]
 [source, text]
 [subs=attributes+]
-{minio-user}
+{user}
 ** Secret Key:
 [.lines_space]
 [.console-input]
 [source, text]
 [subs=attributes+]
-{minio-pass}
+{password}
 ** Endpoint:
 [.lines_space]
 [.console-input]
 [source, text]
 [subs=attributes+]
-{minio-endpoint}
+http://minio-service.wksp-{user}.svc.cluster.local:9000
 ** Region:
 [.lines_space]
 [.console-input]
@@ -109,7 +109,7 @@ It is highly recommended to create your pipeline server before creating a workbe
 [.bordershadow]
 image::02/02-02-pipelineserver01.png[]
 
-* Use the same information as in the Data Connection created earlier (**Shared Minio - pipelines**) and click the **Configure pipeline server** button:
+* Use the same information as in the Data Connection created earlier (**Minio - models**) and click the **Configure pipeline server** button:
 +
 [.bordershadow]
 image::02/02-02-pipelineserver02.png[]
